@@ -1,10 +1,10 @@
 ## Problem Statement
 
-While deployments with source based metadata , We overwrote flow metadata. There were some elements left with no incoming edge but outgoing edge.
+While doing deployments with source based metadata , We overwrote some edges/targetReferences of elements. Now There were some elements left with no incoming edge but outgoing edge.
 
-This converted flow into FREE-FORM 😑. Some of us already hate flows and freeform layout just makes developer experience even worse.
+This made flow throw error when trying to AUTO-LAYOUT [FREE FORM SUCKS 😑]. Some of us already hate flows and freeform layout just makes developer experience even worse.
 
-Solving for a really few people who are facing or have faced **one or more elements without an incoming connection.** error and want to find out which nodes do not have incoming edge but have outgoing edge.
+Solving for a really few people out there who are facing this beautiful error **one or more elements without an incoming connection.** and want to find out which nodes do not have incoming edge but have outgoing edge.
 
 ## How to Use
 
@@ -16,4 +16,5 @@ Solving for a really few people who are facing or have faced **one or more eleme
 1. Result is list of nodes without incoming nodes but have outgoing edge.
 
 ## Contributions
-Feel free to provide UI or feature support in Salesforce Reloaded Extension 😁
+1. Feel free to provide UI or feature support in Salesforce Reloaded Extension 😁
+1. There are some really bad lines of code ever written in repository , Feel free to make PRs to solve for them.
