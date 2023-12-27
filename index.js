@@ -1,97 +1,31 @@
-import debugFlowSample from "./samples/debugFlowSmaple.js";
-import flowSampleMetadata from "./samples/flowImport.js";
+import { nodesNotAllowed, removeKeysFromObject } from "./transformationUtilities/utils.js";
 
-import { removeKeysFromObject } from "./transformationUtilities/utils.js";
-
-const nodesNotAllowed = ["choices", "constants", "dynamicChoiceSets", "formulas", "environments", "processMetadataValues", "variables", "apexPluginCalls", "collectionProcessors", "description", "interviewLabel", "isAdditionalPermissionRequiredToRun", "isOverridable", "isTemplate", "migratedFromWorkflowRuleName", "orchestratedStages", "overriddenFlow", "processType", "recordRollbacks", "runInMode", "sourceTemplate", "startElementReference", "status", "steps", "textTemplates", "timeZoneSidKey", "transforms", "triggerOrder", "urls", "waits"];
+import { analyzeFlowNodes, getNodesWithoutIncomingConnections } from "./transformationUtilities/nodeHelper.js";
 
 
-let flowNode = removeKeysFromObject(flowSampleMetadata, nodesNotAllowed);
-//let flowNodeShorter = removeKeysFromObject(debugFlowSample, nodesNotAllowed);
+import express from 'express';
+import bodyParser from 'body-parser';
 
-function analyzeFlowNodes(flowNode) {
-    let entriesOfFlowNode = Object.entries(flowNode);
-    let countOfNodeVsIncomingNode = {};
+const app = express();
+const port = 3000;
 
-    for (let [key, value] of entriesOfFlowNode) {
-        if (Array.isArray(value)) {
-            countOfNodeVsIncomingNode = manageListNodes(value, countOfNodeVsIncomingNode);
-        }
+app.use(bodyParser.json());
 
-        if (value.constructor.name === "Object") {
-            let targetRefName = value?.connector?.targetReference;
-            countOfNodeVsIncomingNode = manageCountOfNode(targetRefName, countOfNodeVsIncomingNode, false);
-        }
+
+app.post('/analyze', (req, res) => {
+    const inputData = req.body;
+
+    if (!inputData || Object.keys(inputData).length === 0) {
+        return res.status(400).json({ error: 'Invalid data. Please provide valid JSON data.' });
     }
-    return countOfNodeVsIncomingNode;
-}
 
-function manageCountOfNode(nodeName, countStoreMap, isName) {
-    if (!nodeName) {
-        return countStoreMap;
-    }
-    if (isName && !countStoreMap.hasOwnProperty(nodeName)) {
-        countStoreMap[nodeName] = 0;
-        return countStoreMap;
-    }
-    if (isName && countStoreMap.hasOwnProperty(nodeName)) {
-        return countStoreMap;
-    }
-    if (countStoreMap.hasOwnProperty(nodeName)) {
-        countStoreMap[nodeName] = countStoreMap[nodeName] + 1;
-    } else {
-        countStoreMap[nodeName] = 1;
-    }
-    return countStoreMap;
-}
+    const sanitizedData = removeKeysFromObject(inputData, nodesNotAllowed);
+    const analysisResult = analyzeFlowNodes(sanitizedData);
+    let nonIncomingNodeList = getNodesWithoutIncomingConnections(analysisResult)
 
-function manageListNodes(listOfNodes, countStoreMap) {
-    if (!Array.isArray(listOfNodes) || !listOfNodes) {
-        return countStoreMap;
-    }
-    Array.from(listOfNodes).forEach(item => {
-        // Need to remove static chaining
-        let defaultConnector = item?.defaultConnector?.targetReference;
-        let faultConnector = item?.faultConnector?.targetReference;
-        let nodeName = item?.name;
-        let targetRefName = item?.connector?.targetReference;
-        let nextValueRef = item?.nextValueConnector?.targetReference;
-        let ruleList = item?.rules;
+    return res.status(200).json({ result: nonIncomingNodeList });
+});
 
-        // Need to make it dynamic based on list of strings
-        countStoreMap = manageCountOfNode(nodeName, countStoreMap, true);
-        countStoreMap = manageCountOfNode(targetRefName, countStoreMap, false);
-        countStoreMap = manageCountOfNode(nextValueRef, countStoreMap, false);
-        countStoreMap = manageCountOfNode(defaultConnector, countStoreMap, false);
-        countStoreMap = manageCountOfNode(faultConnector, countStoreMap, false);
-
-        if (Array.isArray(ruleList) && ruleList.length > 0) {
-            ruleList.forEach(ruleItem => {
-                let targetRefName = ruleItem?.connector?.targetReference;
-                countStoreMap = manageCountOfNode(targetRefName, countStoreMap, false);
-            })
-        }
-    }
-    )
-    return countStoreMap;
-}
-
-function getNodesWithoutIncomingConnections(analyzedResultMap) {
-    let entriesOfAnalyzedMap = Object.entries(analyzedResultMap);
-
-    let nodesWithoutIncomingEdge = [];
-
-    for (let [key, value] of entriesOfAnalyzedMap) {
-        if (value === 0) {
-            nodesWithoutIncomingEdge.push({ [key]: value });
-        }
-    }
-    return nodesWithoutIncomingEdge;
-
-}
-let countSample = analyzeFlowNodes(flowNode);
-let result = getNodesWithoutIncomingConnections(countSample)
-
-
-// console.log(countSample);
-console.log(result);
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
