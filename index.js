@@ -27,13 +27,11 @@ function analyzeFlowNodes(flowNode) {
 }
 
 function manageCountOfNode(nodeName, countStoreMap, isName) {
-    console.log('>>>>>>>>>>>>>>>> Node name  ' + nodeName + '>>>>>>>>'+isName);
     if (!nodeName) {
         return countStoreMap;
     }
     if(isName && !countStoreMap.hasOwnProperty(nodeName)){
         countStoreMap[nodeName] = 0;
-        console.log(countStoreMap)
         return countStoreMap;
     }
     if(isName && countStoreMap.hasOwnProperty(nodeName)){
@@ -44,7 +42,6 @@ function manageCountOfNode(nodeName, countStoreMap, isName) {
     } else {
         countStoreMap[nodeName] = 1;
     }
-    console.log(countStoreMap)
     return countStoreMap;
 }
 
@@ -57,7 +54,6 @@ function manageListNodes(listOfNodes, countStoreMap) {
         let nodeName = item?.name;
         let targetRefName = item?.connector?.targetReference;
         let nextValueRef = item?.nextValueConnector?.targetReference;
-        console.log(`the ref name ${targetRefName} and node name ${nodeName}`);
         let ruleList = item?.rules;
 
         countStoreMap = manageCountOfNode(nodeName, countStoreMap, true);
@@ -68,7 +64,6 @@ function manageListNodes(listOfNodes, countStoreMap) {
         if (Array.isArray(ruleList) && ruleList.length > 0) {
             ruleList.forEach(ruleItem => {
                 let targetRefName = ruleItem?.connector?.targetReference;
-                console.log(`the rrule item ${targetRefName}`)
                 countStoreMap = manageCountOfNode(targetRefName, countStoreMap, false);
             })
         }
@@ -77,6 +72,6 @@ function manageListNodes(listOfNodes, countStoreMap) {
     return countStoreMap;
 }
 
-let countSample = analyzeFlowNodes(flowNodeShorter);
+let countSample = analyzeFlowNodes(flowNode);
 
 console.log(countSample);
