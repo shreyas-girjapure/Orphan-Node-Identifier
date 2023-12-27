@@ -7,7 +7,7 @@ const nodesNotAllowed = ["choices", "constants", "dynamicChoiceSets", "formulas"
 
 
 let flowNode = removeKeysFromObject(flowSampleMetadata, nodesNotAllowed);
-let flowNodeShorter = removeKeysFromObject(debugFlowSample, nodesNotAllowed);
+//let flowNodeShorter = removeKeysFromObject(debugFlowSample, nodesNotAllowed);
 
 function analyzeFlowNodes(flowNode) {
     let entriesOfFlowNode = Object.entries(flowNode);
@@ -50,6 +50,7 @@ function manageListNodes(listOfNodes, countStoreMap) {
         return countStoreMap;
     }
     Array.from(listOfNodes).forEach(item => {
+        // Need to remove static chaining
         let defaultConnector = item?.defaultConnector?.targetReference;
         let faultConnector = item?.faultConnector?.targetReference;
         let nodeName = item?.name;
@@ -57,6 +58,7 @@ function manageListNodes(listOfNodes, countStoreMap) {
         let nextValueRef = item?.nextValueConnector?.targetReference;
         let ruleList = item?.rules;
 
+        // Need to make it dynamic based on list of strings
         countStoreMap = manageCountOfNode(nodeName, countStoreMap, true);
         countStoreMap = manageCountOfNode(targetRefName, countStoreMap, false);
         countStoreMap = manageCountOfNode(nextValueRef, countStoreMap, false);
