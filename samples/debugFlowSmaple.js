@@ -33,6 +33,33 @@ let debugFlowSample = {
             "locationY": 758,
             "name": "Do_sometjing",
             "processMetadataValues": []
+        },
+        {
+            "assignmentItems": [
+                {
+                    "assignToReference": "temp",
+                    "operator": "Assign",
+                    "processMetadataValues": [],
+                    "value": {
+                        "apexValue": null,
+                        "booleanValue": true,
+                        "dateTimeValue": null,
+                        "dateValue": null,
+                        "elementReference": null,
+                        "numberValue": null,
+                        "sobjectValue": null,
+                        "stringValue": null
+                    }
+                }
+            ],
+            "connector": null,
+            "description": null,
+            "elementSubtype": null,
+            "label": "Some other",
+            "locationX": 484,
+            "locationY": 650,
+            "name": "Some_other",
+            "processMetadataValues": []
         }
     ],
     "choices": [],
@@ -40,7 +67,11 @@ let debugFlowSample = {
     "constants": [],
     "decisions": [
         {
-            "defaultConnector": null,
+            "defaultConnector": {
+                "isGoTo": null,
+                "processMetadataValues": [],
+                "targetReference": "Some_other"
+            },
             "defaultConnectorLabel": "Default Outcome",
             "description": null,
             "elementSubtype": null,
