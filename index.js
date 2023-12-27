@@ -20,7 +20,7 @@ function analyzeFlowNodes(flowNode) {
 
         if (value.constructor.name === "Object") {
             let targetRefName = value?.connector?.targetReference;
-            countOfNodeVsIncomingNode = manageCountOfNode(targetRefName, countOfNodeVsIncomingNode,false);
+            countOfNodeVsIncomingNode = manageCountOfNode(targetRefName, countOfNodeVsIncomingNode, false);
         }
     }
     return countOfNodeVsIncomingNode;
@@ -30,11 +30,11 @@ function manageCountOfNode(nodeName, countStoreMap, isName) {
     if (!nodeName) {
         return countStoreMap;
     }
-    if(isName && !countStoreMap.hasOwnProperty(nodeName)){
+    if (isName && !countStoreMap.hasOwnProperty(nodeName)) {
         countStoreMap[nodeName] = 0;
         return countStoreMap;
     }
-    if(isName && countStoreMap.hasOwnProperty(nodeName)){
+    if (isName && countStoreMap.hasOwnProperty(nodeName)) {
         return countStoreMap;
     }
     if (countStoreMap.hasOwnProperty(nodeName)) {
@@ -51,6 +51,7 @@ function manageListNodes(listOfNodes, countStoreMap) {
     }
     Array.from(listOfNodes).forEach(item => {
         let defaultConnector = item?.defaultConnector?.targetReference;
+        let faultConnector = item?.faultConnector?.targetReference;
         let nodeName = item?.name;
         let targetRefName = item?.connector?.targetReference;
         let nextValueRef = item?.nextValueConnector?.targetReference;
@@ -60,6 +61,7 @@ function manageListNodes(listOfNodes, countStoreMap) {
         countStoreMap = manageCountOfNode(targetRefName, countStoreMap, false);
         countStoreMap = manageCountOfNode(nextValueRef, countStoreMap, false);
         countStoreMap = manageCountOfNode(defaultConnector, countStoreMap, false);
+        countStoreMap = manageCountOfNode(faultConnector, countStoreMap, false);
 
         if (Array.isArray(ruleList) && ruleList.length > 0) {
             ruleList.forEach(ruleItem => {
@@ -72,6 +74,22 @@ function manageListNodes(listOfNodes, countStoreMap) {
     return countStoreMap;
 }
 
-let countSample = analyzeFlowNodes(flowNode);
+function getNodesWithoutIncomingConnections(analyzedResultMap) {
+    let entriesOfAnalyzedMap = Object.entries(analyzedResultMap);
 
-console.log(countSample);
+    let nodesWithoutIncomingEdge = [];
+
+    for (let [key, value] of entriesOfAnalyzedMap) {
+        if (value === 0) {
+            nodesWithoutIncomingEdge.push({ [key]: value });
+        }
+    }
+    return nodesWithoutIncomingEdge;
+
+}
+let countSample = analyzeFlowNodes(flowNode);
+let result = getNodesWithoutIncomingConnections(countSample)
+
+
+// console.log(countSample);
+console.log(result);
