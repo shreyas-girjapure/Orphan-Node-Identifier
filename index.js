@@ -5,10 +5,13 @@ import { analyzeFlowNodes, getNodesWithoutIncomingConnections } from "./transfor
 
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+
 
 const app = express();
 const port = 3000;
 
+app.use(cors());
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
