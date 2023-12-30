@@ -45,6 +45,7 @@ function manageListNodes(listOfNodes, countStoreMap) {
         let nodeName = item?.name;
         let targetRefName = item?.connector?.targetReference;
         let nextValueRef = item?.nextValueConnector?.targetReference;
+        let noMoreValuesConnector = item?.noMoreValuesConnector?.targetReference;
         let ruleList = item?.rules;
 
         // Need to make it dynamic based on list of strings
