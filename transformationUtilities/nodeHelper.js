@@ -54,6 +54,7 @@ function manageListNodes(listOfNodes, countStoreMap) {
         countStoreMap = manageCountOfNode(nextValueRef, countStoreMap, false);
         countStoreMap = manageCountOfNode(defaultConnector, countStoreMap, false);
         countStoreMap = manageCountOfNode(faultConnector, countStoreMap, false);
+        countStoreMap = manageCountOfNode(noMoreValuesConnector, countStoreMap, false);
 
         if (Array.isArray(ruleList) && ruleList.length > 0) {
             ruleList.forEach(ruleItem => {
