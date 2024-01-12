@@ -7,6 +7,11 @@ This made flow throw error when trying to AUTO-LAYOUT [FREE FORM SUCKS 😑]. So
 Solving for a really few people out there who are facing this beautiful error **one or more elements without an incoming connection.** and want to find out which nodes do not have incoming edge but have outgoing edge.
 
 ## How to Use
+> Note :
+> This API is hosted on free VM instance.
+> Spinning up machince after 15 minutes of inactivity takes less than 1 min.
+> Please be patient for a minute. 
+
 
 1. Get metadata of the flow you want to analyze with tooling API [Or Use salesforce inspector on flow detail page]
 1. Make a `POST` request on https://flow-incoming-edge-analyzer.onrender.com/analyze
