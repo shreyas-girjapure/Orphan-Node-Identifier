@@ -21,5 +21,5 @@ Solving for a really few people out there who are facing this beautiful error `O
 1. Result is list of nodes without incoming nodes but have outgoing edge.
 
 ## Contributions
-1. Feel free to provide UI or feature support in Salesforce Reloaded Extension 😁
+1. Feel free to provide UI 😁
 1. There are some really bad lines of code ever written in repository , Feel free to make PRs to solve for them.
